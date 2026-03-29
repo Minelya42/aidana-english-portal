@@ -175,8 +175,13 @@ with st.sidebar:
         st.session_state.role = None
         st.rerun()
 
-tabs = st.tabs(["🏆 TOP CHART", "👤 MY SKILLS", "📈 HISTORY", "👨‍🏫 CONTROL", "⚙️ DB"] if st.session_state.role == "admin" else ["🏆 TOP CHART", "👤 MY SKILLS", "📈 HISTORY"])
+# Определяем список вкладок в зависимости от роли
+tab_titles = ["🏆 TOP CHART", "👤 MY SKILLS", "📈 HISTORY"]
+if st.session_state.role == "admin":
+    tab_titles += ["👨‍🏫 CONTROL", "⚙️ DB"]
 
+# Создаем вкладки из этого списка
+tabs = st.tabs(tab_titles)
 with tabs[0]:
     st.markdown("<h2 style='color: #883322;'>🏆 World Ranking</h2>", unsafe_allow_html=True)
     df_ranking = get_df("SELECT name as 'Student Name', xp as 'EXP', level as 'LVL' FROM students ORDER BY xp DESC")
@@ -298,12 +303,14 @@ with tabs[2]:
         st.info("Дневник пуст. Оценки еще не выставлялись.")
 # --- 4. TEACHER CONTROL ---
 
-with tabs[3]:
-        # Красивое приветствие сверху
-        st.markdown("""
-            <div style="background: linear-gradient(90deg, #883322 0%, #283123 100%); padding: 30px; border-radius: 20px; margin-bottom: 25px;">
-                <h1 style="color: #EDE9DF; margin: 0;">Hello, Miss Aidana! </h1>
-                <p style="color: #EACFA3; opacity: 0.9;">Manage your students and sync progress here.</p>
+if st.session_state.role == "admin":
+    # --- 4. TEACHER CONTROL ---
+    with tabs[3]:
+        st.markdown(f"""
+            <div style="background-color: #ffffff; padding: 20px; border-radius: 15px; 
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 10px solid #F0944D; margin-bottom: 25px;">
+                <h2 style="color: #283123; margin: 0;">Good day, Miss Aidana! ✨</h2>
+                <p style="color: #883322; font-weight: 500; margin-top: 5px;">Your students have been busy. Let's review their progress.</p>
             </div>
         """, unsafe_allow_html=True)
         
